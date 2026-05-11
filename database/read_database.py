@@ -15,11 +15,13 @@ class ReadDatabase(GeneralDatabase):
             FROM files f
             LEFT JOIN functions fu ON fu.file_id = f.id
             LEFT JOIN classes cl ON cl.file_id = f.id
+            GROUP BY f.id
             """
         )
 
         results: list[FileListResult] = []
         for row in self._cursor.fetchall():
+            print(row)
             if row is not None:
                 results.append(FileListResult(
                     path=row[0],
@@ -27,6 +29,7 @@ class ReadDatabase(GeneralDatabase):
                     function_count=row[2],
                     class_count=row[3]
                 ))
+        print(results)
         return results
 
     def get_file_content(self, name: str) -> FileContentResult | None:
@@ -132,7 +135,8 @@ class ReadDatabase(GeneralDatabase):
                    doc,
                    args,
                    is_async,
-                   return_type
+                   return_type,
+                    class_id
             FROM functions
             WHERE file_id = ?
             """,
@@ -149,7 +153,8 @@ class ReadDatabase(GeneralDatabase):
                     doc=row[3],
                     args=self.decode_variables(row[4]),
                     is_async=row[5],
-                    return_type=row[6]
+                    return_type=row[6],
+                    is_class_method=True if row[7] is not None else False
                 ))
 
         return results

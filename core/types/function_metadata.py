@@ -16,4 +16,3 @@ class FunctionMetadata:
     is_async: bool = field(default=False)
 
     is_class_method: bool = field(default=False)
-    class_name: str | None = field(default=None)
