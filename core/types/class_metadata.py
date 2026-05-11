@@ -24,7 +24,8 @@ class ClassMetadata:
         f.is_class_method = True
 
         if f.name == "__init__":
-            f.name = f"__init__/{len(f.args)}"
+            f.name = f"{self.name}.__init__/{len(f.args)}"
             self.constructors.append(f)
         else:
+            f.name = f"{self.name}.{f.name}"
             self.methods.append(f)
