@@ -4,7 +4,7 @@ from core.types.class_metadata import ClassMetadata
 from core.types.file_metadata import FileMetadata
 from core.types.function_metadata import FunctionMetadata
 from database.general_database import GeneralDatabase
-from database.insert_result import FunctionInsertResult, ClassInsertResult, ClassInsertResults, FunctionInsertResults, \
+from database.results.insert_result import FunctionInsertResult, ClassInsertResult, ClassInsertResults, FunctionInsertResults, \
     FileInsertResult
 
 
