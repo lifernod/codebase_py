@@ -10,9 +10,9 @@ class FunctionMetadata:
     line_end: int = field(default=0)
 
     args: list[VariableMetadata] = field(default_factory=list)
-    return_type: str = field(default="None")
+    return_type: str | None = field(default=None)
+
     doc: str | None = field(default=None)
 
     is_async: bool = field(default=False)
-
     is_class_method: bool = field(default=False)

@@ -3,24 +3,26 @@ import ast
 from core.types.variable_metadata import VariableMetadata
 
 
-def parse_arg(node: ast.arg) -> VariableMetadata:
-    name = node.arg
-    ty = node.annotation.id if isinstance(node.annotation, ast.Name) else None
+def _unparse_annotation(node: ast.expr | None) -> str | None:
+    if node is None:
+        return None
+    try:
+        return ast.unparse(node)
+    except Exception:
+        return None
 
+
+def parse_arg(node: ast.arg) -> VariableMetadata:
     return VariableMetadata(
-        name=name,
-        ty=ty,
+        name=node.arg,
+        ty=_unparse_annotation(node.annotation),
     )
 
 
 def parse_assign(node: ast.AnnAssign) -> VariableMetadata | None:
     if not isinstance(node.target, ast.Name):
         return None
-
-    name = node.target.id
-    ty = node.annotation.id if isinstance(node.annotation, ast.Name) else None
-
     return VariableMetadata(
-        name=name,
-        ty=ty,
+        name=node.target.id,
+        ty=_unparse_annotation(node.annotation),
     )

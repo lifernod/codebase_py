@@ -5,6 +5,15 @@ from core.types.function_metadata import FunctionMetadata
 from core.types.variable_metadata import VariableMetadata
 
 
+def _unparse_annotation(node: ast.expr | None) -> str | None:
+    if node is None:
+        return None
+    try:
+        return ast.unparse(node)
+    except Exception:
+        return None
+
+
 def parse_function(node: ast.FunctionDef | ast.AsyncFunctionDef) -> FunctionMetadata:
     name = node.name
     line_start = node.lineno
@@ -12,13 +21,9 @@ def parse_function(node: ast.FunctionDef | ast.AsyncFunctionDef) -> FunctionMeta
     doc = ast.get_docstring(node)
     is_async = isinstance(node, ast.AsyncFunctionDef)
 
-    args: list[VariableMetadata] = [
-        parse_arg(arg) for arg in node.args.args
-    ]
+    args: list[VariableMetadata] = [parse_arg(arg) for arg in node.args.args]
 
-    return_type = "None"
-    if node.returns is not None and isinstance(node.returns, ast.Name):
-        return_type = node.returns.id
+    return_type = _unparse_annotation(node.returns)  # None means "no annotation"
 
     return FunctionMetadata(
         name=name,

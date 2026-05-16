@@ -1,4 +1,5 @@
 import sys
+from pprint import pprint
 
 from tabulate import tabulate
 
@@ -19,6 +20,9 @@ def main():
         for result in results:
             wdb.save_file(result)
             rows.append([result.name, len(result.classes), len(result.functions)])
+
+        if len(sys.argv) == 3 and sys.argv[2] == '-p':
+            pprint(results)
 
         wdb.close()
 
